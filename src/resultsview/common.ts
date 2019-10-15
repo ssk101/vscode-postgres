@@ -238,7 +238,7 @@ function formatFieldValue(field: FieldInfo, value: any): string {
         value = JSON.stringify(value);
       break;
     case 'timestamptz': value = value.toJSON().toString(); break;
-    case 'text': canTruncate = true; break;
+    case 'text': canTruncate = false; break;
     default:
       value = value.toString();
   }
