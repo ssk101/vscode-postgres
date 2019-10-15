@@ -25,7 +25,8 @@
         "id": "postgres",
         "extensions": [
           ".pgsql",
-          ".psql"
+          ".psql",
+          ".sql"
         ],
         "aliases": [
           "Postgres"
@@ -107,7 +108,7 @@
       {
         "command": "vscode-postgres.runQuery",
         "key": "f5",
-        "when": "editorLangId == postgres"
+        "when": "editorLangId == postgres || editorLangId == sql"
       }
     ],
     "commands": [
@@ -317,13 +318,11 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run build-preview && npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "npm run build-preview-dev && tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "build-preview-dev": "npx webpack --mode development",
-    "build-preview": "npx webpack --mode production"
+    "vscode:prepublish": "webpack --mode production",
+    "test-compile": "tsc -p ./",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "package": "vsce package"
   },
   "devDependencies": {
     "@types/csv-stringify": "^1.4.2",

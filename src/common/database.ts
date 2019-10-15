@@ -85,11 +85,6 @@ export class Database {
     let client = new PgClient(connectionOptions);
     await client.connect();
     const versionRes = await client.query(`SELECT current_setting('server_version_num') as ver_num;`);
-    /*
-    return res.rows.map<ColumnNode>(column => {
-      return new ColumnNode(this.connection, this.table, column);
-    });
-    */
     let versionNumber = parseInt(versionRes.rows[0].ver_num);
     client.pg_version = versionNumber;
     return client;
@@ -122,11 +117,6 @@ export class Database {
     } catch (err) {
       OutputChannel.appendLine(err);
       vscode.window.showErrorMessage(err.message);
-      // vscode.window.showErrorMessage(err.message, "Show Console").then((button) => {
-      //   if (button === 'Show Console') {
-      //     OutputChannel.show();
-      //   }
-      // });
     } finally {
       if (connection)
         await connection.end();

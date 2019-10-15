@@ -72,59 +72,7 @@ export class Validator {
         lines: commandLines
       };
     }
-    //   let response = results.join("\n");
-  //   if (in_statement && !in_block_comment) {
-  //     if (in_line_comment)
-  //       response += "\n";
-  //     response += ';';
-  //   }
-  //   return response;
   }
-
-  // public static preparer_sql(sql) {
-  //   let in_statement = false,
-  //       in_line_comment = false,
-  //       in_block_comment = false;
-    
-  //   let results: string[] = [];
-  //   for (let data of Validator.split_sql(sql)) {
-  //     let precontents = null, start_str = null;
-  //     if (!in_statement && !in_line_comment && !in_block_comment) {
-  //       if (data.start != "--" && data.start != "/*" && data.contents.trim().length > 0) {
-  //         in_statement = true;
-  //         precontents = 'EXPLAIN ';
-  //       }
-  //     }
-
-  //     if (data.start == "/*") in_block_comment = true;
-  //     else if (data.start == '--' && !in_block_comment) {
-  //       in_line_comment = true;
-  //       if (!in_statement)
-  //         start_str = "//";
-  //     }
-
-  //     start_str = start_str || data.start || '';
-  //     precontents = precontents || '';
-
-  //     results.push(start_str + precontents + data.contents)
-
-  //     if (!in_line_comment && !in_block_comment && in_statement && data.end === ';')
-  //       in_statement = false;
-      
-  //     if (in_block_comment && data.end === '*/')
-  //       in_block_comment = false;
-
-  //     if (in_line_comment && data.end == "\n")
-  //       in_line_comment = false;
-  //   }
-  //   let response = results.join("\n");
-  //   if (in_statement && !in_block_comment) {
-  //     if (in_line_comment)
-  //       response += "\n";
-  //     response += ';';
-  //   }
-  //   return response;
-  // }
 
   public static* split_sql(sql: string) {
     let bookends = [";", '"', '""', "'", "''", "--", "/*", "*/"];

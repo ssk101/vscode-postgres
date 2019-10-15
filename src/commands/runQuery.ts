@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { IConnection } from "../common/IConnection";
 import { EditorState } from "../common/editorState";
 import { Database } from "../common/database";
+import { parseVars } from "../utils/parse";
 
 'use strict';
 
@@ -48,7 +49,8 @@ export class runQueryCommand extends BaseCommand {
       return;
     }
 
-    let sql = editor.document.getText(selectionToTrim);
+    let sql = parseVars(editor.document.getText(selectionToTrim));
+    console.log(sql)
     return Database.runQuery(sql, editor, connection);
   }
 }
