@@ -1,13 +1,13 @@
 {
-  "name": "vscode-postgres",
-  "displayName": "PostgreSQL",
+  "name": "vscode-postgres-fork",
+  "displayName": "PostgreSQL Fork",
   "description": "PostgreSQL Management Tool",
-  "version": "1.1.11",
+  "version": "1.1.13",
   "publisher": "ckolkman",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Borvik/vscode-postgres.git"
+    "url": "https://github.com/ssk101/vscode-postgres.git"
   },
   "engines": {
     "vscode": "^1.26.0"
@@ -318,10 +318,13 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "webpack --mode production",
-    "test-compile": "tsc -p ./",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development --watch",
+    "vscode:prepublish": "npm run build-preview && npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "npm run build-preview-dev && tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "build-preview-dev": "npx webpack --mode development",
+    "build-preview": "npx webpack --mode production",
     "package": "vsce package"
   },
   "devDependencies": {
