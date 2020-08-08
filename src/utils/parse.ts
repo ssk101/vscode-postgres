@@ -16,6 +16,11 @@ export function parseVars(sql) {
   const varNameRegex = /(?<=([a-zA-Z*]\s:|[\s*]:))([a-zA-Z_]*)(?=(\n|$|::[a-zA-Z_]*(\[\]\s|\s|,)(AS|,|\n|\r)))/gm
   const vars = sql.match(varNameRegex)
   const definedMatches = sql.match(definedKVRegex)
+
+  if(!definedMatches) {
+    return sql
+  }
+
   const definedVars = definedMatches.reduce((acc, cur) => {
     const matched = cur.match(/([a-zA-Z_]*)(\s\=\s)(.*)/)
     if(matched[1] && matched[3]) {
