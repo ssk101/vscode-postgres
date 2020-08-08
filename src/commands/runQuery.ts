@@ -50,7 +50,8 @@ export class runQueryCommand extends BaseCommand {
     }
 
     let sql = parseVars(editor.document.getText(selectionToTrim));
-    console.log(sql)
-    return Database.runQuery(sql, editor, connection);
+    if(sql) {
+      return Database.runQuery(sql, editor, connection);
+    }
   }
 }
