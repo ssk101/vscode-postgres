@@ -24,14 +24,14 @@ export class ResultsManager implements vscode.WebviewPanelSerializer {
     }
   }
 
-  public showResults(resource: vscode.Uri, viewColumn: vscode.ViewColumn, res: QueryResults[]): void {
+  public showResults(resource: vscode.Uri, viewColumn: vscode.ViewColumn, res: QueryResults[], execTime: number): void {
     let view = this.getExistingView(resource);
     if (view) {
       view.reveal(viewColumn);
     } else {
       view = this.createNewView(resource, viewColumn);
     }
-    view.update(resource, res);
+    view.update(resource, res, execTime);
   }
 
   public get activeWinResults() {

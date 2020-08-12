@@ -8,6 +8,7 @@ export class ResultView {
   public static viewType = 'vscode-postgres.results';
 
   private _resource: vscode.Uri;
+  private _execTime: number = 0;
   private _results: QueryResults[] = [];
   private _disposed: boolean = false;
   private firstUpdate: boolean = true;
@@ -25,7 +26,7 @@ export class ResultView {
   public static async revive(webview: vscode.WebviewPanel, state: any): Promise<ResultView> {
     const resource = vscode.Uri.parse(state.resource);
 
-    const view = new ResultView(webview, resource);
+    const view = new ResultView(webview, resource, null);
 
     view.editor.webview.options = ResultView.getWebviewOptions(resource);
     view._results.push({
@@ -46,12 +47,13 @@ export class ResultView {
         enableFindWidget: true,
         ...ResultView.getWebviewOptions(resource)
       });
-    
-    return new ResultView(view, resource);
+
+    return new ResultView(view, resource, null);
   }
 
-  private constructor(webview: vscode.WebviewPanel, resource: vscode.Uri) {
+  private constructor(webview: vscode.WebviewPanel, resource: vscode.Uri, execTime: number) {
     this._resource = resource;
+    this._execTime = execTime;
     this.editor = webview;
 
     this.editor.onDidDispose(() => this.dispose(), null, this.disposables);
@@ -86,12 +88,13 @@ export class ResultView {
     disposeAll(this.disposables);
   }
 
-  public update(resource: vscode.Uri, res: QueryResults[]) {
+  public update(resource: vscode.Uri, res: QueryResults[], execTime: number) {
     clearTimeout(this.throttleTimer);
     this.throttleTimer = undefined;
 
     this._results = res;
     this._resource = resource;
+    this._execTime = execTime;
 
     this.throttleTimer = setTimeout(() => this.doUpdate(), 300);
     this.firstUpdate = false;
@@ -99,7 +102,7 @@ export class ResultView {
 
   public refresh(): void {
     this.forceUpdate = true;
-    this.update(this._resource, this._results);
+    this.update(this._resource, this._results, this._execTime);
   }
 
   public matchesResource(otherResource: vscode.Uri): boolean {
@@ -131,7 +134,7 @@ export class ResultView {
     this.forceUpdate = false;
 
     // build HTML for results
-    let html = generateResultsHtml(resource, results, this.state);
+    let html = generateResultsHtml(resource, results, this._execTime, this.state);
     this.editor.title = ResultView.getViewTitle(resource);
     this.editor.webview.options = ResultView.getWebviewOptions(resource);
     this.editor.webview.html = html;

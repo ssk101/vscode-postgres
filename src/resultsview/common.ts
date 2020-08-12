@@ -11,7 +11,7 @@ export function disposeAll(disposables: vscode.Disposable[]) {
   }
 }
 
-export function generateResultsHtml(sourceUri: vscode.Uri, results: QueryResults[], state?: any) {
+export function generateResultsHtml(sourceUri: vscode.Uri, results: QueryResults[], execTime: number, state?: any) {
   let pageScript = getExtensionResourcePath('index.js');
   let pageStyle = getExtensionResourcePath('style.css');
   const nonce = new Date().getTime() + '' + new Date().getMilliseconds();
@@ -29,6 +29,7 @@ export function generateResultsHtml(sourceUri: vscode.Uri, results: QueryResults
       ${getStyles(nonce)}
     </head>
     <body class="vscode-body">
+      <pre>Execution time: ${execTime}s</pre>
       ${getResultsTables(results)}
     </body>
   </html>`;
@@ -54,37 +55,37 @@ function getStyles(nonce) {
     pre.vscode-postgres-result {
       margin: 5px;
     }
-    
+
     pre.vscode-postgres-result-insert {
-    
+
     }
-    
+
     pre.vscode-postgres-result-update {
-      
+
     }
-    
+
     pre.vscode-postgres-result-create {
-      
+
     }
-    
+
     pre.vscode-postgres-result-delete {
-      
+
     }
-    
+
     pre.vscode-postgres-result-explain {
-      
+
     }
-    
+
     pre.vscode-postgres-result-generic {
-      
+
     }
-    
+
     pre.vscode-postgres-result-message {
-      
+
     }
 
     pre.vscode-postgres-result-select {
-      
+
     }
 
     .field-type {
@@ -92,18 +93,18 @@ function getStyles(nonce) {
     }
 
     ${prettyJsonFieldStyle}
-    
+
     table {
       border-collapse: collapse;
     }
-    
+
     th, td {
       border-width: 1px;
       border-style: solid;
       border-color: var(--vscode-panel-border);
       padding: 3px 5px;
     }
-    
+
     .timestamptz-field { white-space: nowrap; }
 
     .result-divider {

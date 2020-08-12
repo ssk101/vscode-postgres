@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as moment from 'moment';
 import { Pool, Client, types, ClientConfig } from 'pg';
 import { IConnection } from "./IConnection";
 import { OutputChannel } from './outputChannel';
@@ -96,11 +97,17 @@ export class Database {
     let resultsUri = vscode.Uri.parse('postgres-results://' + uri);
 
     let connection: PgClient = null;
+
+    const then = moment()
+
     try {
       connection = await Database.createConnection(connectionOptions);
       const typeNamesQuery = `select oid, format_type(oid, typtypmod) as display_type, typname from pg_type`;
       const types: TypeResults = await connection.query(typeNamesQuery);
       const res: QueryResults | QueryResults[] = await connection.query({ text: sql, rowMode: 'array' });
+
+      const execTime = moment().diff(then, 'seconds', true)
+
       const results: QueryResults[] = Array.isArray(res) ? res : [res];
 
       results.forEach((result) => {
@@ -112,7 +119,7 @@ export class Database {
           }
         });
       });
-      await OutputChannel.displayResults(resultsUri, 'Results: ' + title, results);
+      await OutputChannel.displayResults(resultsUri, 'Results: ' + title, results, execTime);
       vscode.window.showTextDocument(editor.document, editor.viewColumn);
     } catch (err) {
       OutputChannel.appendLine(err);

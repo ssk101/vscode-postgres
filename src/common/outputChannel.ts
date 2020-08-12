@@ -8,15 +8,15 @@ export class OutputChannel {
   public static show(): void {
     OutputChannel.outputChannel.show(true);
   }
-  
+
   public static appendLine(value: string, show?: boolean) {
     if (show) OutputChannel.outputChannel.show(true);
     OutputChannel.outputChannel.appendLine(value);
   }
 
-  public static displayResults(uri: vscode.Uri, title: string, res: QueryResults[]): void {
+  public static displayResults(uri: vscode.Uri, title: string, res: QueryResults[], execTime: number): void {
     let viewColumn = OutputChannel.getViewColumn();
-    Global.ResultManager.showResults(uri, viewColumn, res);
+    Global.ResultManager.showResults(uri, viewColumn, res, execTime);
   }
 
   private static getViewColumn(): vscode.ViewColumn {
