@@ -12,7 +12,7 @@ export function parseVars(sql) {
     /(?<=#define\s)/.source + definedBaseRegex.source,
     definedBaseRegex.flags
   )
-  const varNameRegex = /(?<=:)([\w]*)(?=::([A-Z]*(\[\]|\s|,|$)))/g
+  const varNameRegex = /(?<!::)(?<=\s*(\w*|^))(?<=(^|\s|\():)(\w*)(?=:|\n|$)/gm
   const vars = sql.match(varNameRegex)
   const definedMatches = sql.match(definedKVRegex)
 
@@ -29,6 +29,7 @@ export function parseVars(sql) {
   }, {})
 
   var missing = vars.filter(v => {
+    v = v.replace(/:/g, '').trim()
     return !Object.keys(definedVars).includes(v)
   })
 
@@ -42,14 +43,15 @@ export function parseVars(sql) {
   sql = sql.split('\n').map(line => {
     if (definedVars) {
       const re = new RegExp(/:/.source + varNameRegex.source, varNameRegex.flags)
-      line = line.replace(re, (match) => {
+      line = line.trim().replace(re, (match) => {
         const value = definedVars[match.replace(/:/, '')]
-        return value
+        return value.trim()
       })
     }
     return line
   }).join('\n')
 
+  // Remove #define vars
   Object.keys(definedVars).forEach(v => {
     const re = new RegExp(
       /(--\s|)/.source + definedFullRegex.source,
@@ -57,6 +59,8 @@ export function parseVars(sql) {
     )
     sql = sql.replace(re, '')
   })
+
+  console.log(sql)
 
   return sql
 }
